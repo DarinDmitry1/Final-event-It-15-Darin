@@ -7,7 +7,8 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-
+#include <limits>
+#include <cctype>
 using namespace std;
 class Comment {
 public:
@@ -41,7 +42,7 @@ private:
 public:
     SongManager(const string& file);//конструктор(сохраняет имя файла и загружает песни)
     void loadFromFile();//загружает список песен из файла
-    void saveToFile();//сохраняет текущий список песен в фаил
+    void saveToFile();//сохраняет текущий список песен в фаил и комментарии в фаил
     void displaySongs() const;//выводит таблицу на экран
     void editSong();//редактирование песни(изменение бпм и тональности)
     void commentMenu();//меню комментариев
@@ -50,3 +51,5 @@ public:
     void clearScreen();//очистить консоль(для удобства)
     void removeSong();//удалить песню
 };
+
+int getSimpleInt(const string& prompt);//валидация
