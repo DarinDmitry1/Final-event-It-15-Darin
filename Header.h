@@ -10,13 +10,35 @@
 #include <limits>
 #include <cctype>
 using namespace std;
-class Comment {
-public:
+
+struct CommentNode {
     string text;
-    int likes;//Создаёт комментарий с заданным текстом txt и начальным количеством лайков 0
-    Comment(const string& txt);//Увеличивает количество лайков комментария на 1
-    void like();//возвращает кол-во лайков
-    string str() const;
+    int likes;
+    CommentNode* prev;
+    CommentNode* next;
+
+    CommentNode(const string& txt,
+        CommentNode* p = nullptr,
+        CommentNode* n = nullptr);
+};
+
+class CommentList {
+private:
+    CommentNode* head;
+    CommentNode* tail;
+    int size;
+
+    void checkIntegrity() const;//проверка целостности узла
+
+public:
+    CommentList();//конструктор
+    ~CommentList();//дестркутор
+
+    void addComment(const string& text);//добавить коммент
+    void likeComment(int index);//лайк коммента
+    //геттеры
+    vector<CommentNode*> getSortedComments() const;
+    int getSize() const;
 };
 
 class Song {
@@ -25,30 +47,30 @@ public:
     string title;
     int bpm;
     string key;
-    vector<Comment> comments;//список комментариев к песне
-    
+    CommentList comments;
+
     Song(const string& grp, const string& ttl, int bpm, const string& key);//конструктор
-    void addComment(const string& text);//добавить комментарии
-    void likeComment(int index);//увеличевает лайки указанного комментария 
-    void displayComments() const;//отображает все комментарии к песне, отсортированные по количеству лайков
-    string str() const;//возвращает строчку с описанием песни(группа название бпм тональность) 
+    void addComment(const string& text);//добавить коммент
+    void likeComment(int index);//лайкнуть коммент с комментлиста(потому что мы не берем в SongManager CommentList)
+    void displayComments() const;//вывод всех комментариев
+    string str() const;//работа с меню
 };
-//класс, управляющий списком песен и работой с файлом
+//все опции работы с песней и комментариями
 class SongManager {
 private:
-    vector<Song> songs;//все песни
-    string filename;//имя файла
+    vector<Song> songs;
+    string filename;
 
 public:
-    SongManager(const string& file);//конструктор(сохраняет имя файла и загружает песни)
-    void loadFromFile();//загружает список песен из файла
-    void saveToFile();//сохраняет текущий список песен в фаил и комментарии в фаил
-    void displaySongs() const;//выводит таблицу на экран
-    void editSong();//редактирование песни(изменение бпм и тональности)
-    void commentMenu();//меню комментариев
-    void menu();//главный интерфейс
-    void addNewSong();//добавить новую песню в список(обязательно надо сохранить)
-    void clearScreen();//очистить консоль(для удобства)
+    SongManager(const string& file);//конструктоор
+    void loadFromFile();//выгрузка информации из фаила
+    void saveToFile();//сохранение
+    void displaySongs() const;//вывод всех песен
+    void editSong();//редактировать песню
+    void commentMenu();//меню комметов
+    void menu();//основное меню
+    void addNewSong();//добавить новую песню
+    void clearScreen();//очистить консоль
     void removeSong();//удалить песню
 };
 
